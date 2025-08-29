@@ -120,7 +120,12 @@ func OpenDB(c *config.DB) (*gorm.DB, error) {
 }
 
 func AutoMigrate() error {
-	err = DB.AutoMigrate(&model.Source{})
+	err = DB.AutoMigrate(
+		&model.User{},
+		&model.UserConf{},
+		&model.Gold{},
+		&model.TaskLog{},
+	)
 	if err != nil {
 		return DbMigrateError
 	}

@@ -5,12 +5,12 @@ import (
 	"time"
 )
 
-type ID struct {
-	ID uint `gorm:"primaryKey"`
+type ComID struct {
+	ID uint `gorm:"primaryKey" json:"id"`
 }
 
-type Time struct {
-	CreatedAt time.Time
-	UpdatedAt time.Time
+type ComTime struct {
+	CreatedAt time.Time      `gorm:"index;autoCreateTime;"`
+	UpdatedAt time.Time      `gorm:"index;autoUpdateTime;"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
