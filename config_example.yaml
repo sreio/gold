@@ -1,0 +1,29 @@
+logx:
+  level: trace  # 日志级别: "trace","debug","info","warn","error","fatal","panic"
+  json: true   # 是否使用 JSON 格式；否则为 text
+  withCaller: false # 显示调用者（文件:行号），方便定位
+  console: true # 控制台输出（stderr）
+  file:
+    enable: true # 是否开启文件输出
+    path: "logs/app.log" # 日志文件路径
+    maxSize: 128 # 日志文件最大大小（MB）
+    maxAge: 7 # 日志文件最大保存天数
+    maxBackups: 3 # 日志文件最大备份数
+    compress: true # 是否压缩
+    minLevelForFile: "" # 文件日志级别，高于此级别的日志才会写入文件
+  timeFormat: "2006-01-02 15:04:05" # 日志时间格式
+
+
+db:
+  driver: sqlite3 # 数据库驱动: sqlite3,mysql
+  maxOpenConns: 50 # 最大连接数
+  maxIdleConns: 10 # 最大空闲数
+  connMaxLifetime: 30m
+  sqlite3:
+    path: "data/gold.db"
+  mysql:
+    host: "127.0.0.1"
+    port: 3306
+    user: "root"
+    password: "123456"
+    dbName: "gold"
