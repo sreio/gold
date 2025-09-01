@@ -11,6 +11,7 @@ import (
 	gormmysql "gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"log"
 	"os"
 	"strings"
 	"time"
@@ -31,6 +32,7 @@ var MysqlMissConfigError = errors.New("mysql 配置不完整")
 var DbMigrateError = errors.New("数据库迁移失败")
 
 func OpenDB(c *config.DB) (*gorm.DB, error) {
+	log.Println("初始化数据库...")
 
 	driver = strings.ToLower(c.Driver)
 
@@ -120,6 +122,7 @@ func OpenDB(c *config.DB) (*gorm.DB, error) {
 }
 
 func AutoMigrate() error {
+	log.Println("数据库迁移...")
 	err = DB.AutoMigrate(
 		&model.User{},
 		&model.UserConf{},

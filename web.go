@@ -14,13 +14,13 @@ func main() {
 	}
 
 	// 初始化依赖
-	err = core.Init(*cfg)
+	err = core.Init(cfg)
 	if err != nil {
 		log.Fatalf("初始化依赖失败: %v", err)
 	}
 
 	// 启动服务
-	err = core.Start(*cfg)
+	err = core.Start(cfg.Web)
 	if err != nil {
 		log.Fatalf("启动服务失败: %v", err)
 	}

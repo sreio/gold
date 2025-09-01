@@ -4,6 +4,7 @@ import (
 	"github.com/natefinch/lumberjack"
 	"github.com/sreio/gold/config"
 	"io"
+	"log"
 	"os"
 	"strings"
 	"time"
@@ -26,7 +27,8 @@ import (
 var L = logrus.New()
 
 // Init 初始化全局 logger
-func Init(opt config.Logx) *logrus.Logger {
+func Init(opt *config.Logx) *logrus.Logger {
+	log.Println("初始化日志服务...")
 	// Level
 	level := parseLevel(opt.Level)
 	L.SetLevel(level)
