@@ -55,3 +55,7 @@ func Start(cfg config.Web) error {
 
 	return nil
 }
+
+func StartCron() {
+
+}

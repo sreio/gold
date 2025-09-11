@@ -7,3 +7,17 @@ type User struct {
 	SaveDay int    `gorm:"column:save_day;type:int;not null;comment:推送日志保留天数" json:"save_day"`
 	ComTime
 }
+
+type ApiUserConf struct {
+	ComID
+	Type  string `json:"type"`
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
+type ApiAddUser struct {
+	Name     string `json:"name"`
+	Cron     string `json:"cron"`
+	SaveDay  int    `json:"save_day"`
+	UserConf []ApiUserConf
+}

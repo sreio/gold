@@ -33,6 +33,7 @@ func handleRouter(r *gin.Engine) {
 	authApi.Use(AuthMiddle)
 
 	authApi.GET("/source/list", H.Source.List)
+	authApi.GET("/notification/list", H.Notification.List)
 
 	userApi := authApi.Group("/user")
 	userApi.GET("/list", H.User.List)

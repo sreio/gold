@@ -3,10 +3,10 @@ package model
 type Source string
 
 const (
-	IcbcOne Source = "icbc_1"
-	IcbcTwo Source = "icbc_2"
+	ICBCSHOPPRICE     = "icbc_shop_price"
+	ICBCBANKRUYIPRICE = "icbc_bank_ruyi_price"
 )
 
 type SourceList []Source
 
-var SourcesList = SourceList{IcbcOne, IcbcTwo}
+var SourcesList = SourceList{ICBCSHOPPRICE, ICBCBANKRUYIPRICE}
