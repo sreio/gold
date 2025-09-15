@@ -13,7 +13,7 @@ func (s *Notification) List(c *gin.Context) {
 		"code": "0",
 		"msg":  "success",
 		"data": gin.H{
-			"list": model.ChanelList{},
+			"list": model.ChanelDataList,
 		},
 	})
 }

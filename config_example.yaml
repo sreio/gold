@@ -31,3 +31,4 @@ db:
 web:
   host: "0.0.0.0"
   port: 8081
+  token: "sreio-weidada" # 自定义令牌

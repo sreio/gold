@@ -16,8 +16,17 @@ type ApiUserConf struct {
 }
 
 type ApiAddUser struct {
-	Name     string `json:"name"`
-	Cron     string `json:"cron"`
-	SaveDay  int    `json:"save_day"`
-	UserConf []ApiUserConf
+	Name    string `json:"name"`
+	Cron    string `json:"cron"`
+	SaveDay int    `json:"save_day"`
+}
+
+type ApiRequestListUser struct {
+	ApiAddUser
+	UserConf []UserConf `json:"user_conf" gorm:"foreignKey:UserID"`
+}
+
+type ApiRequestAddUser struct {
+	ApiAddUser
+	UserConf []ApiUserConf `json:"user_conf"`
 }

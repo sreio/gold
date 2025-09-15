@@ -3,3 +3,5 @@
 config.yaml
 /ui/dist/*
 /ui/node_modules/*
+.idea
+.vscode

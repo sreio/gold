@@ -10,7 +10,7 @@ type ComID struct {
 }
 
 type ComTime struct {
-	CreatedAt time.Time      `gorm:"index;autoCreateTime;"`
-	UpdatedAt time.Time      `gorm:"index;autoUpdateTime;"`
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	CreatedAt time.Time      `gorm:"index;autoCreateTime;" json:"created_at"`
+	UpdatedAt time.Time      `gorm:"index;autoUpdateTime;" json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 }

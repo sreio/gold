@@ -24,7 +24,7 @@ func Start(cfg config.Web) error {
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
-		Handler: webrouter.NewRouter(R).Handler(),
+		Handler: webrouter.NewRouter(R, cfg).Handler(),
 	}
 
 	go func() {
