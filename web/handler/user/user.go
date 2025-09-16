@@ -26,7 +26,7 @@ func (u *User) List(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"code": "1", "msg": err.Error()})
 		return
 	}
-	items, total, err := u.svc.List(q)
+	list, total, err := u.svc.List(q)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": "1", "msg": err.Error()})
 		return
@@ -35,7 +35,7 @@ func (u *User) List(c *gin.Context) {
 		"code": "0",
 		"msg":  "success",
 		"data": gin.H{
-			"items": items,
+			"list":  list,
 			"total": total,
 			"page":  q.Page,
 			"size":  q.Size,
