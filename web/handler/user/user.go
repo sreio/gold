@@ -3,88 +3,87 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/sreio/gold/database"
-	"github.com/sreio/gold/web/model"
-	"gorm.io/gorm"
+	"github.com/sreio/gold/web/dto"
+	"github.com/sreio/gold/web/repository"
+	"github.com/sreio/gold/web/service/data"
 	"net/http"
+	"strconv"
 )
 
 type User struct {
+	svc *data.UserService
+}
+
+func NewUser() *User {
+	return &User{
+		svc: data.NewUserService(repository.NewUserRepo(database.DB)),
+	}
 }
 
 func (u *User) List(c *gin.Context) {
-	var ApiRequestListUser []model.ApiRequestListUser
-	database.DB.Preload("UserConf").Find(&ApiRequestListUser)
-	c.JSON(200, gin.H{
+	var q dto.QueryUser
+	if err := c.ShouldBindQuery(&q); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"code": "1", "msg": err.Error()})
+		return
+	}
+	items, total, err := u.svc.List(q)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"code": "1", "msg": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
 		"code": "0",
 		"msg":  "success",
-		"data": ApiRequestListUser,
+		"data": gin.H{
+			"items": items,
+			"total": total,
+			"page":  q.Page,
+			"size":  q.Size,
+		},
 	})
 }
 
 func (u *User) Add(c *gin.Context) {
-	var ApiRequestAddUser model.ApiRequestAddUser
-	if err := c.ShouldBindJSON(&ApiRequestAddUser); err != nil {
-		c.JSON(200, gin.H{
-			"code": "1",
-			"msg":  "参数错误",
-			"data": gin.H{},
-		})
+	var userDto dto.CreateUserDTO
+	if err := c.ShouldBindJSON(&userDto); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"code": "1", "msg": "参数错误: " + err.Error()})
 		return
 	}
-
-	err := database.DB.Transaction(func(tx *gorm.DB) error {
-		userModel := &model.User{
-			Name:    ApiRequestAddUser.Name,
-			Cron:    ApiRequestAddUser.Cron,
-			SaveDay: ApiRequestAddUser.SaveDay,
-		}
-		err := tx.Create(userModel).Error
-		if err != nil {
-			return err
-		}
-		for _, v := range ApiRequestAddUser.UserConf {
-			userConfModel := &model.UserConf{
-				UserID: userModel.ID,
-				Key:    v.Key,
-				Type:   v.Type,
-				Value:  v.Value,
-			}
-			err := tx.Create(userConfModel).Error
-			if err != nil {
-				return err
-			}
-		}
-
-		return nil
-	})
-
+	created, err := u.svc.Create(userDto)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"code": "1",
-			"msg":  "添加失败",
-		})
+		c.JSON(http.StatusInternalServerError, gin.H{"code": "1", "msg": "添加失败: " + err.Error()})
 		return
 	}
-
-	c.JSON(200, gin.H{
-		"code": "0",
-		"msg":  "success",
-		"data": gin.H{},
-	})
+	c.JSON(http.StatusOK, gin.H{"code": "0", "msg": "success", "data": created})
 }
 
 func (u *User) Edit(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"code": "0",
-		"msg":  "success",
-		"data": gin.H{},
-	})
+	id64, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+	if id64 == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"code": "1", "msg": "id 无效"})
+		return
+	}
+	var userDto dto.UpdateUserDTO
+	if err := c.ShouldBindJSON(&userDto); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"code": "1", "msg": "参数错误: " + err.Error()})
+		return
+	}
+	if err := u.svc.Update(uint(id64), userDto); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"code": "1", "msg": "更新失败: " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"code": "0", "msg": "success"})
 }
 
 func (u *User) Del(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"code": "0",
-		"msg":  "success",
-		"data": gin.H{},
-	})
+	id64, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+	if id64 == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"code": "1", "msg": "id 无效"})
+		return
+	}
+	if err := u.svc.Delete(uint(id64)); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"code": "1", "msg": "删除失败: " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"code": "0", "msg": "success"})
 }

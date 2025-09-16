@@ -12,7 +12,7 @@ import (
 type Handler struct {
 	Auth         Auth.Auth
 	Source       source.Source
-	User         user.User
+	User         *user.User
 	Gold         gold.Gold
 	Task         task.Task
 	Notification notification.Notification
@@ -22,7 +22,7 @@ func NewHandler() *Handler {
 	return &Handler{
 		Auth:         Auth.Auth{},
 		Source:       source.Source{},
-		User:         user.User{},
+		User:         user.NewUser(),
 		Gold:         gold.Gold{},
 		Task:         task.Task{},
 		Notification: notification.Notification{},

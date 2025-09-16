@@ -1,7 +1,7 @@
 package model
 
 import (
-	"gorm.io/gorm"
+	"fmt"
 	"time"
 )
 
@@ -10,7 +10,13 @@ type ComID struct {
 }
 
 type ComTime struct {
-	CreatedAt time.Time      `gorm:"index;autoCreateTime;" json:"created_at"`
-	UpdatedAt time.Time      `gorm:"index;autoUpdateTime;" json:"updated_at"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
+	CreatedAt *LocalTime `gorm:"type:datetime(0);index;autoCreateTime;" json:"created_at"`
+	UpdatedAt *LocalTime `gorm:"type:datetime(0);index;autoUpdateTime;" json:"updated_at"`
+}
+
+type LocalTime time.Time
+
+func (t *LocalTime) MarshalJSON() ([]byte, error) {
+	tTime := time.Time(*t)
+	return []byte(fmt.Sprintf("\"%v\"", tTime.Format(time.DateTime))), nil
 }
