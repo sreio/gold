@@ -2,10 +2,10 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/sreio/gold/database"
 	"github.com/sreio/gold/web/dto"
 	"github.com/sreio/gold/web/repository"
 	"github.com/sreio/gold/web/service/data"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 )
@@ -14,9 +14,9 @@ type User struct {
 	svc *data.UserService
 }
 
-func NewUser() *User {
+func NewUser(db *gorm.DB) *User {
 	return &User{
-		svc: data.NewUserService(repository.NewUserRepo(database.DB)),
+		svc: data.NewUserService(repository.NewUserRepo(db)),
 	}
 }
 
@@ -49,6 +49,18 @@ func (u *User) Add(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"code": "1", "msg": "参数错误: " + err.Error()})
 		return
 	}
+
+	exits, err := u.svc.Exits(userDto.Name)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"code": "1", "msg": "查询错误: " + err.Error()})
+		return
+	}
+
+	if exits {
+		c.JSON(http.StatusBadRequest, gin.H{"code": "1", "msg": "用户已存在"})
+		return
+	}
+
 	created, err := u.svc.Create(userDto)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": "1", "msg": "添加失败: " + err.Error()})

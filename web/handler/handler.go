@@ -7,6 +7,7 @@ import (
 	"github.com/sreio/gold/web/handler/source"
 	"github.com/sreio/gold/web/handler/task"
 	"github.com/sreio/gold/web/handler/user"
+	"gorm.io/gorm"
 )
 
 type Handler struct {
@@ -18,11 +19,11 @@ type Handler struct {
 	Notification notification.Notification
 }
 
-func NewHandler() *Handler {
+func NewHandler(db *gorm.DB) *Handler {
 	return &Handler{
 		Auth:         Auth.Auth{},
 		Source:       source.Source{},
-		User:         user.NewUser(),
+		User:         user.NewUser(db),
 		Gold:         gold.Gold{},
 		Task:         task.Task{},
 		Notification: notification.Notification{},

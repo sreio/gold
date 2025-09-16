@@ -33,3 +33,16 @@ func (s *UserService) Update(id uint, dto dto.UpdateUserDTO) error {
 func (s *UserService) Delete(id uint) error {
 	return s.repo.Delete(id)
 }
+
+func (s *UserService) Exits(name string) (bool, error) {
+	u, err := s.repo.GetByName(name)
+	if err != nil {
+		return false, err
+	}
+
+	if u.ID > 0 {
+		return true, nil
+	}
+
+	return false, nil
+}

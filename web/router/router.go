@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/sreio/gold/config"
+	"github.com/sreio/gold/database"
 	"github.com/sreio/gold/web/handler"
 	jwtService "github.com/sreio/gold/web/service/jwt"
 	"net/http"
@@ -11,11 +12,8 @@ import (
 
 var H *handler.Handler
 
-func init() {
-	H = handler.NewHandler()
-}
-
 func NewRouter(router *gin.Engine, cfg config.Web) *gin.Engine {
+	H = handler.NewHandler(database.DB)
 	handleRouter(router, cfg)
 	return router
 }

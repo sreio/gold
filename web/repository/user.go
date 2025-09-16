@@ -38,6 +38,14 @@ func (r *UserRepo) GetByID(id uint) (*model.User, error) {
 	return &u, nil
 }
 
+func (r *UserRepo) GetByName(name string) (*model.User, error) {
+	var u model.User
+	if err := r.db.Where("name = ?", name).First(&u).Error; err != nil {
+		return nil, err
+	}
+	return &u, nil
+}
+
 func (r *UserRepo) CreateWithConf(u *model.User, conf []dto.UserConfDTO) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Create(u).Error; err != nil {
