@@ -1,9 +1,11 @@
 package data
 
 import (
+	"errors"
 	"github.com/sreio/gold/web/dto"
 	"github.com/sreio/gold/web/model"
 	"github.com/sreio/gold/web/repository"
+	"gorm.io/gorm"
 )
 
 type UserService struct {
@@ -36,6 +38,10 @@ func (s *UserService) Delete(id uint) error {
 
 func (s *UserService) Exits(name string) (bool, error) {
 	u, err := s.repo.GetByName(name)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return false, nil // 没找到=不存在，不算错误
+	}
+
 	if err != nil {
 		return false, err
 	}

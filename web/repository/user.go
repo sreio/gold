@@ -40,7 +40,7 @@ func (r *UserRepo) GetByID(id uint) (*model.User, error) {
 
 func (r *UserRepo) GetByName(name string) (*model.User, error) {
 	var u model.User
-	if err := r.db.Where("name = ?", name).First(&u).Error; err != nil {
+	if err := r.db.Preload("UserConf").Where("name = ?", name).First(&u).Error; err != nil {
 		return nil, err
 	}
 	return &u, nil
